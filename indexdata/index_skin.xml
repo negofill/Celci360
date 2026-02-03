@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<krpano version="1.23.1">
+
+    
+  <!-- Spot Style - Default Point Spot Style -->
+
+
+  <style name="IconDefaultPointSpotStyle"
+         url="%FIRSTXML%/spots/hotspot_plan_sequence_user_defaultpoint0.png"
+         visible="false"
+         frame="0"
+         lastframe="9"
+         framewidth="67"
+         frameheight="67"
+         stopspotsequence="false"
+         crop="0|0|67|67"
+         edge="center"
+         onloaded="startspotanimation(0.1);"
+         onhover="onhoverIconDefaultPointSpotStyle"
+         onout="onoutIconDefaultPointSpotStyle"
+
+
+         />
+  <action name="onhoverIconDefaultPointSpotStyle">
+    showtooltip('hotspot');
+  </action>
+  <action name="onoutIconDefaultPointSpotStyle">
+    hideTooltip();
+
+
+
+  </action>
+
+
+
+<!-- ********** -->
+<!-- Header -->
+<!-- id : header -->
+<!-- ********** -->
+
+  <layer name="header"
+         keep="true"
+         url="%FIRSTXML%/graphics/header/header.png" 
+         bgalpha="0.50588235294117645"
+         align="top"
+         x="0"
+         y="0"
+         zorder="1"
+         enabled="false"
+         capture="true"
+         visible="false"
+         height="38"
+         width="100%"
+         accuracy="1"
+         />
+
+  <events name="headerevents"
+    onTourStart="showheader();"
+    hidetourcontrols="hideheader();"
+    showtourcontrols="showheader();"
+    keep="true" />
+
+  <action name="hideheader">
+    set(layer[header].visible, false);
+  </action>
+  <action name="showheader">
+    set(layer[header].visible, true);
+  </action>
+
+<!-- ********** -->
+<!-- Button -->
+<!-- id : button -->
+<!-- ********** -->
+
+  <layer name="button"
+         keep="true"
+         url="%FIRSTXML%/graphics/button/imgs.png"
+         align="right"
+         x="0"
+         y="10"
+         zorder="2"
+         visible="false"
+         onclick="buttonOnClick"
+         width="48"
+         height="prop"
+         />
+
+
+
+  <action name="buttonOnClick">showGallery_gallery();
+
+
+  </action>
+
+  <events name="buttonevents"
+    onTourStart="showbutton();"
+    hidetourcontrols="hidebutton();"
+    showtourcontrols="showbutton();"
+    keep="true" />
+  <action name="hidebutton">set(layer[button].visible, false);</action>
+  <action name="showbutton">if(tour_displaycontrols,set(layer[button].visible, true);,hidebutton(););</action>
+
+
+<!-- ********** -->
+<!-- Gallery -->
+<!-- id : gallery -->
+<!-- ********** -->
+
+<ptplugin name="gallery" engine="kolorBox">
+	<settings>
+		<option name="position" value="center" type="string" />
+		<option name="margin_x" value="0" type="int" />
+		<option name="margin_y" value="0" type="int" />
+		<option name="external_padding" value="5" type="int" />
+		<option name="draggable_box" value="false" type="bool" />
+		<option name="slideshow_autoplay" value="false" type="bool" />
+		<option name="slideshow" value="5000" type="int" />
+		<option name="container_auto_size" value="false" type="bool" />
+		<option name="container_width" value="85" type="int" />
+		<option name="container_width_unit" value="percent" type="string" />
+		<option name="container_height" value="85" type="int" />
+		<option name="container_height_unit" value="percent" type="string" />
+		<option name="container_color" value="ffffff" type="string" />
+		<option name="container_alpha" value="0.80000000000000004" type="float" />
+		<option name="container_topleft_border_radius" value="5" type="int" />
+		<option name="container_topright_border_radius" value="5" type="int" />
+		<option name="container_bottomleft_border_radius" value="5" type="int" />
+		<option name="container_bottomright_border_radius" value="5" type="int" />
+		<option name="container_border_width" value="0" type="int" />
+		<option name="container_border_color" value="ffffff" type="string" />
+		<option name="container_border_alpha" value="1" type="float" />
+		<option name="overlay_displayed" value="true" type="bool" />
+		<option name="overlay_color" value="000000" type="string" />
+		<option name="overlay_alpha" value="0.50000762951094835" type="float" />
+
+		<option name="item_border_width" value="0" type="int" />
+		<option name="item_border_color" value="ffffff" type="string" />
+		<option name="item_border_alpha" value="1" type="float" />
+		
+		<option name="title_displayed" value="false" type="bool" />
+		
+		<option name="caption_displayed" value="false" type="bool" />
+		
+		<option name="play_displayed" value="false" type="bool" />
+		<option name="play_position" value="bottomleft" type="string" />
+		<option name="play_text" value="galleryplay_text" type="string" />
+
+
+
+
+		<option name="navigation_displayed" value="true" type="bool" />
+		<option name="navigation_position" value="bottom" type="string" />
+		<option name="counter_color" value="666666" type="string" />
+		<option name="navprev_text" value="gallerynavprev_text" type="string" />
+		<option name="navnext_text" value="gallerynavnext_text" type="string" />
+
+
+
+
+		<option name="navigation_arrows" value="false" type="bool" />
+
+
+
+
+		<option name="fullscreen_displayed" value="false" type="bool" />
+		<option name="fullscreen_position" value="topleft" type="string" />
+		<option name="fullscreen_text" value="galleryfullscreen_text" type="string" />
+
+
+
+
+		<option name="close_displayed" value="true" type="bool" />
+		<option name="close_position" value="topright" type="string" />
+		<option name="close_text" value="galleryclose_text" type="string" />
+
+		<option name="close_callback" value="invokeKrFunction('closeKolorBoxCallback_gallery')" type="string" />
+		<option name="zorder" value="3" type="int" />
+		<option name="use_i18n" value="true" type="bool" />
+	</settings>
+	<internaldata>
+		<item name="item_1" title="gallerypicture_title0" caption="gallerypicture_caption0" value="indexdata/graphics/gallery/celi_-_arbo_-_quarto01_02a_quarto01_01.jpg"/>
+		<item name="item_2" title="gallerypicture_title1" caption="gallerypicture_caption1" value="indexdata/graphics/gallery/celi_-_arbo_-_quarto01_02a_quarto01_02..jpg"/>
+		<item name="item_3" title="gallerypicture_title2" caption="gallerypicture_caption2" value="indexdata/graphics/gallery/celi_-_arbo_-_quarto02_02a_quarto02_01.jpg"/>
+		<item name="item_4" title="gallerypicture_title3" caption="gallerypicture_caption3" value="indexdata/graphics/gallery/celi_-_arbo_-_quarto02_02a_quarto02_02.jpg"/>
+		<item name="item_5" title="gallerypicture_title4" caption="gallerypicture_caption4" value="indexdata/graphics/gallery/celi_-_arbo_-_sala02a_living01.jpg"/>
+		<item name="item_6" title="gallerypicture_title5" caption="gallerypicture_caption5" value="indexdata/graphics/gallery/celi_-_arbo_-_sala02a_living02.jpg"/>
+		<item name="item_7" title="gallerypicture_title6" caption="gallerypicture_caption6" value="indexdata/graphics/gallery/celi_-_arbo_-_sala02a_living03.jpg"/>
+		<item name="item_8" title="gallerypicture_title7" caption="gallerypicture_caption7" value="indexdata/graphics/gallery/celi_-_arbo_-_suite02a_cam_1.jpg"/>
+		<item name="item_9" title="gallerypicture_title8" caption="gallerypicture_caption8" value="indexdata/graphics/gallery/celi_-_arbo_-_suite02a_cam_2.jpg"/>
+	</internaldata>
+</ptplugin>
+
+<action name="kolorBoxJsReady_gallery">
+	set(ptplugin[gallery].jsready, true);
+</action>
+
+<action name="showGallery_gallery">
+	ifnot(ptplugin[gallery].isOpen,
+		if(ptplugin[gallery].doNotDeleteMe,
+			set(ptplugin[gallery].currentCall, false);
+		set(ptplugin[gallery].isOpen, true);
+		set(ptplugin[gallery].doNotDeleteMe, false);
+		set(gallery_boxurl, %1);
+		pauseautorotation(forceplugin);
+
+		js(invokePluginFunction(gallery, openKolorBox, %1));
+		,
+			set(ptplugin[gallery].currentCall, true);
+			set(ptplugin[gallery].doNotDeleteMe, true);
+			events.dispatch(onremovedisplayedobject);
+			delayedcall(0.3,showGallery_gallery(%1););
+		);
+	,
+		if(%1 !== null AND %1 != gallery_boxurl,
+			closeKolorBox_gallery();
+			delayedcall(0.3,showGallery_gallery(%1););
+		);
+	);
+</action>
+
+<action name="toggleGallery_gallery">
+	js(invokePluginFunction(gallery, toggleKolorBox, %1));
+</action>
+
+
+<action name="closeKolorBox_gallery">
+	if(ptplugin[gallery].doNotDeleteMe,
+		set(ptplugin[gallery].doNotDeleteMe, false);
+	,
+	js(invokePluginFunction(gallery, closeKolorBox));
+	);
+</action>
+
+<action name="closeKolorBoxCallback_gallery">
+	resumeautorotation(forceplugin);
+
+	set(ptplugin[gallery].doNotDeleteMe, false);
+	set(ptplugin[gallery].isOpen, false);
+</action>
+
+<action name="changeLanguage_gallery">
+	if(ptplugin[gallery].jsready,
+		js(invokePluginFunction(gallery, changeLanguage));
+	,
+		delayedcall(delay_gallery, 0.1, changeLanguage_gallery(););
+	);
+</action>
+
+<events name="kolorBoxEvents_gallery" 
+	keep="true"
+	onremovepano="if(ptplugin[gallery].isOpen,closeKolorBox_gallery(););"
+	onremovedisplayedobject="ifnot(ptplugin[gallery].currentCall,if(ptplugin[gallery].isOpen,closeKolorBox_gallery();););"
+	changetourlanguage="changeLanguage_gallery();"
+	/>
+           <layer align="topleft" x="10" y="10" zorder="4"  name="logo-modif" keep="true" visible="false" alpha="0" autoalpha="true" capture="false"     tooltip="logo-modiftooltipText" onhover="showTooltip('plugin');" onout="hideTooltip();"     url="%FIRSTXML%/graphics/logo.modif/celi_marca-1.png"   onclick="
+getmessage(urltoopen,logo-modifwebsiteurl);openurl(get(urltoopen),_blank);
+"      width.desktop="52" height.desktop="prop"       width.tablet="52" height.tablet="prop"       width.mobile="44" height.mobile="prop"   /> <action name="hidelogo-modif"> set(layer[logo-modif].visible, false); </action> <action name="showlogo-modif">  set(layer[logo-modif].visible, true);  </action>        <events name="logo-modifLogoEditEvents" onnewscene="logo-modifcheckIDs" keep="true" devices="html5"/> <action name="logo-modifcheckIDs" type="Javascript"><![CDATA[     krpano.call('tween(layer[logo-modif].alpha, 1, 1');  ]]></action>  
+</krpano>
