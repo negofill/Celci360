@@ -8,17 +8,23 @@
   <data name="en_project_title"><![CDATA[Celi - Arbo Decorado Virtual]]></data>
 
 
-  <data name="en_panogroup15_title"><![CDATA[Group 15]]></data>
+  <data name="en_panogroup15_title"><![CDATA[AMBIENTES 360]]></data>
 
-  <data name="en_pano10_title"><![CDATA[CELI - ARBO - LIVING01]]></data>
-  <data name="en_pano11_title"><![CDATA[CELI - ARBO - VARANDA]]></data>
-  <data name="en_pano12_title"><![CDATA[CELI - ARBO - QUARTO01]]></data>
-  <data name="en_pano13_title"><![CDATA[CELI - ARBO - QUARTO02]]></data>
-  <data name="en_pano14_title"><![CDATA[CELI - ARBO - SUITE]]></data>
-
-
+  <data name="en_pano10_title"><![CDATA[LIVING]]></data>
+  <data name="en_pano11_title"><![CDATA[VARANDA]]></data>
+  <data name="en_pano12_title"><![CDATA[QUARTO 01]]></data>
+  <data name="en_pano13_title"><![CDATA[QUARTO 02]]></data>
+  <data name="en_pano14_title"><![CDATA[SUITE]]></data>
 
 
+
+
+	<data name="en_project_floor_title"><![CDATA[Celi - Arbo Decorado Virtual]]></data>
+	<data name="en_spotmap49_tooltip"><![CDATA[]]></data>
+	<data name="en_spotmap50_tooltip"><![CDATA[]]></data>
+	<data name="en_spotmap51_tooltip"><![CDATA[]]></data>
+	<data name="en_spotmap52_tooltip"><![CDATA[]]></data>
+	<data name="en_spotmap53_tooltip"><![CDATA[]]></data>
 
 
   <data name="en_buttontooltip"><![CDATA[]]></data>
@@ -43,9 +49,59 @@
   <data name="en_gallerypicture_caption7"><![CDATA[]]></data>
   <data name="en_gallerypicture_title8"><![CDATA[]]></data>
   <data name="en_gallerypicture_caption8"><![CDATA[]]></data>
+  <data name="en_gallerypicture_title9"><![CDATA[]]></data>
+  <data name="en_gallerypicture_caption9"><![CDATA[]]></data>
+  <data name="en_gallerypicture_title10"><![CDATA[]]></data>
+  <data name="en_gallerypicture_caption10"><![CDATA[]]></data>
+  <data name="en_gallerypicture_title11"><![CDATA[]]></data>
+  <data name="en_gallerypicture_caption11"><![CDATA[]]></data>
+  <data name="en_gallerypicture_title12"><![CDATA[]]></data>
+  <data name="en_gallerypicture_caption12"><![CDATA[]]></data>
+  <data name="en_gallerypicture_title13"><![CDATA[]]></data>
+  <data name="en_gallerypicture_caption13"><![CDATA[]]></data>
+  <data name="en_gallerypicture_title14"><![CDATA[]]></data>
+  <data name="en_gallerypicture_caption14"><![CDATA[]]></data>
+  <data name="en_gallerypicture_title15"><![CDATA[]]></data>
+  <data name="en_gallerypicture_caption15"><![CDATA[]]></data>
+  <data name="en_gallerypicture_title16"><![CDATA[]]></data>
+  <data name="en_gallerypicture_caption16"><![CDATA[]]></data>
+  <data name="en_gallerypicture_title17"><![CDATA[]]></data>
+  <data name="en_gallerypicture_caption17"><![CDATA[]]></data>
+  <data name="en_gallerypicture_title18"><![CDATA[]]></data>
+  <data name="en_gallerypicture_caption18"><![CDATA[]]></data>
+  <data name="en_gallerypicture_title19"><![CDATA[]]></data>
+  <data name="en_gallerypicture_caption19"><![CDATA[]]></data>
+  <data name="en_gallerypicture_title20"><![CDATA[]]></data>
+  <data name="en_gallerypicture_caption20"><![CDATA[]]></data>
+  <data name="en_gallerypicture_title21"><![CDATA[]]></data>
+  <data name="en_gallerypicture_caption21"><![CDATA[]]></data>
+  <data name="en_gallerypicture_title22"><![CDATA[]]></data>
+  <data name="en_gallerypicture_caption22"><![CDATA[]]></data>
+  <data name="en_gallerypicture_title23"><![CDATA[]]></data>
+  <data name="en_gallerypicture_caption23"><![CDATA[]]></data>
+  <data name="en_gallerypicture_title24"><![CDATA[]]></data>
+  <data name="en_gallerypicture_caption24"><![CDATA[]]></data>
+  <data name="en_gallerypicture_title25"><![CDATA[]]></data>
+  <data name="en_gallerypicture_caption25"><![CDATA[]]></data>
+  <data name="en_gallerypicture_title26"><![CDATA[]]></data>
+  <data name="en_gallerypicture_caption26"><![CDATA[]]></data>
+  <data name="en_gallerypicture_title27"><![CDATA[]]></data>
+  <data name="en_gallerypicture_caption27"><![CDATA[]]></data>
+  <data name="en_gallerypicture_title28"><![CDATA[]]></data>
+  <data name="en_gallerypicture_caption28"><![CDATA[]]></data>
   <data name="en_logo-modifwebsiteurl"><![CDATA[https://www.celi.com.br/imovel/arbo-residence/]]></data>
   <data name="en_logo-modiftooltipText"><![CDATA[Open website]]></data>
   <data name="en_logo-modifscenesP"><![CDATA[]]></data>
+  <data name="en_logo-modif1websiteurl"><![CDATA[https://arboresidence.com.br/]]></data>
+  <data name="en_logo-modif1scenesP"><![CDATA[]]></data>
+  <data name="en_button1tooltip"><![CDATA[]]></data>
+  <data name="en_button2tooltip"><![CDATA[]]></data>
+  <data name="en_button2onclick105257openurlwebsiteurl"><![CDATA[https://www.youtube.com/watch?v=uZ-8a_Xu3g0]]></data>
+  <data name="en_contextmenuopenwebsitelabel1"><![CDATA[Video icons created by vectaicon]]></data>
+  <data name="en_contextmenuwebsiteurl1"><![CDATA[https://www.flaticon.com/free-icons/video]]></data>
+  <data name="en_contextmenuopenFsLabel"><![CDATA[Enter Fullscreen]]></data>
+  <data name="en_contextmenucloseFsLabel"><![CDATA[Exit Fullscreen]]></data>
+  <data name="en_floorPlanmenu_label"><![CDATA[Select a floor plan]]></data>
 
 
   <data name="en_vr_setup_hmd0"><![CDATA[SELECT YOUR HMD]]></data>

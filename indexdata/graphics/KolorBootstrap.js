@@ -259,7 +259,10 @@ function eventKrpanoLoaded (isWebVr) {
 	
 	}else{
 	
-	addKolorBox('gallery');
+	
+addKolorArea('floorPlanArea');
+addKolorMenu('panoramaMenu');
+addKolorBox('gallery');
 
 	}
 }
@@ -273,6 +276,10 @@ function eventUnloadPlugins () {
 	resetValuesForPlugins();
 
 	deleteKolorBox('gallery');
+deleteKolorMenu('panoramaMenu');
+
+deleteKolorFloorPlan('floorPlan');
+deleteKolorArea('floorPlanArea');
 
 }
 
@@ -450,6 +457,488 @@ function showKolorBox(pPlugID, pIndex, pInitOnly)
  * @return {void}
  */
 function deleteKolorBox(pPlugID)
+{
+	if(ktools.KolorPluginList.getInstance().getPlugin(pPlugID)){
+		ktools.KolorPluginList.getInstance().removePlugin(pPlugID);
+	}
+	var parent = document.getElementById("panoDIV");
+	var child = document.getElementById(pPlugID);
+	if(parent && child){
+		parent.removeChild(child);
+	}
+}
+
+
+/**
+ * @function
+ * @description Add an instance of kolorMenu JS Engine, loads JS and CSS files then init and populate related plugin that's based on it.
+ * @param {String} pPlugID The name of the plugin you want to give to the kolorBox instance. 
+ * @return {void} 
+ */
+function addKolorMenu(pPlugID) 
+{
+	if(typeof ktools.KolorPluginList.getInstance().getPlugin(pPlugID) == "undefined")
+	{
+		var kolorMenuCSS = new ktools.CssStyle("KolorMenuCSS", crossDomainTargetUrl+"indexdata/graphics/KolorMenu/kolorMenu.css");
+		var kolorMenuJS = new ktools.Script("KolorMenuJS", crossDomainTargetUrl+"indexdata/graphics/KolorMenu/KolorMenu.min.js", [], true);
+		var kolorMenuPlugin = new ktools.KolorPlugin(pPlugID);
+		kolorMenuPlugin.addScript(kolorMenuJS);
+		kolorMenuPlugin.addCss(kolorMenuCSS);
+		ktools.KolorPluginList.getInstance().addPlugin(kolorMenuPlugin.getPluginName(), kolorMenuPlugin, true);
+	}
+}
+
+/**
+ * @function
+ * @description Create KolorMenu and/or display it if exists.
+ * @param {String} pPlugID The name of the plugin you want to init and show.
+ * @return {void} 
+ */
+function openKolorMenu(pPlugID)
+{
+	if(debug) { console.log("openKolorMenu "+pPlugID); }
+	
+	if(!ktools.KolorPluginList.getInstance().getPlugin(pPlugID).getRegistered() || !ktools.KolorPluginList.getInstance().getPlugin(pPlugID).isInitialized() || typeof KolorMenu == "undefined"){
+		createKolorMenu(pPlugID);
+	} else {
+		ktools.KolorPluginList.getInstance().getPlugin(pPlugID).getRegistered().showKolorMenu();
+	}
+}
+
+/**
+ * @function
+ * @description Init, populate and show the kolorMenu.
+ * @param {String} pPlugID The name of the plugin you want to init and show.
+ * @return {void} 
+ */
+function createKolorMenu(pPlugID)
+{	
+	if(debug) { console.log("createKolorMenu "+pPlugID); }
+
+	//Check if the KolorMenu is loaded
+	if(!ktools.KolorPluginList.getInstance().getPlugin(pPlugID).isInitialized()  || typeof KolorMenu == "undefined")
+	{
+		err = "KolorMenu JS or XML is not loaded !";
+		if(debug){ console.log(err); }
+		//If not loaded, retry in 100 ms
+		setTimeout(function() { createKolorMenu(pPlugID); }, 100);
+		return;
+	}
+
+	//Check if the KolorMenu is instantiate and registered with the ktools.Plugin Object
+	//If not, instantiate the KolorMenu and register it.
+	if(ktools.KolorPluginList.getInstance().getPlugin(pPlugID).getRegistered() == null)
+	{
+		ktools.KolorPluginList.getInstance().getPlugin(pPlugID).register(new KolorMenu(pPlugID, "panoDIV"));
+	}
+	
+	//Get the registered instance of KolorMenu
+	var kolorMenu = ktools.KolorPluginList.getInstance().getPlugin(pPlugID).getRegistered();
+	
+	//If kolorMenu is not ready, populate datas
+	if(!kolorMenu.isReady())
+	{
+		var kolorMenuOptions = [];
+		
+		//Build the Options data for the KolorMenu
+		var optionLength = parseInt(getKrPanoInstance().get("ptplugin["+pPlugID+"].settings.option.count"));
+	
+		for(var i = 0; i < optionLength; i++)
+		{
+			if (getKrValue("ptplugin["+pPlugID+"].settings.option["+i+"].name","string") == 'zorder') {
+				kolorMenuOptions[getKrValue("ptplugin["+pPlugID+"].settings.option["+i+"].name","string")] = kolorStartIndex + getKrValue("ptplugin["+pPlugID+"].settings.option["+i+"].value", getKrValue("ptplugin["+pPlugID+"].settings.option["+i+"].type", "string"));
+			} else {
+				kolorMenuOptions[getKrValue("ptplugin["+pPlugID+"].settings.option["+i+"].name","string")] = getKrValue("ptplugin["+pPlugID+"].settings.option["+i+"].value", getKrValue("ptplugin["+pPlugID+"].settings.option["+i+"].type", "string"));
+			}
+		}
+		//add the device check
+		kolorMenuOptions['device'] = getKrValue('vrtourdevice','string');
+		//kolorMenuOptions['scale'] = getKrValue('vrtourdevicescale','float');
+		kolorMenu.setKolorMenuOptions(kolorMenuOptions);
+		
+		var groupLength = parseInt(getKrPanoInstance().get("ptplugin["+pPlugID+"].internaldata.group.count"));
+		var group = null;
+		
+		var itemLength = 0;
+		var item = null;
+		
+		var itemOptionsLength = 0;
+		
+		for(var j = 0; j < groupLength; j++)
+		{
+			group = new KolorMenuObject();
+			group.setName(getKrValue("ptplugin["+pPlugID+"].internaldata.group["+j+"].name","string"));
+			if(getKrValue("ptplugin["+pPlugID+"].internaldata.group["+j+"].titleID","string") !== '')
+				group.setTitle(ktools.I18N.getInstance().getMessage(getKrValue("ptplugin["+pPlugID+"].internaldata.group["+j+"].titleID","string")));
+			group.setI18nText(getKrValue("ptplugin["+pPlugID+"].internaldata.group["+j+"].titleID","string"));
+			group.setAction(getKrValue("ptplugin["+pPlugID+"].internaldata.group["+j+"].action","string"));
+			group.setThumbnail(getKrValue("ptplugin["+pPlugID+"].internaldata.group["+j+"].thumbnail","string"));
+			group.setSubMenu(getKrValue("ptplugin["+pPlugID+"].internaldata.group["+j+"].subMenu","bool"));
+			group.setCssClass(getKrValue("ptplugin["+pPlugID+"].internaldata.group["+j+"].cssClass","string"));
+			
+			itemLength = parseInt(getKrPanoInstance().get("ptplugin["+pPlugID+"].internaldata.group["+j+"].item.count"));
+			
+			for(var k = 0; k < itemLength; k++)
+			{
+				item = new KolorMenuObject();
+				item.setName(getKrValue("ptplugin["+pPlugID+"].internaldata.group["+j+"].item["+k+"].name","string"));
+				if(getKrValue("ptplugin["+pPlugID+"].internaldata.group["+j+"].item["+k+"].titleID","string") !== '')
+					item.setTitle(ktools.I18N.getInstance().getMessage(getKrValue("ptplugin["+pPlugID+"].internaldata.group["+j+"].item["+k+"].titleID","string")));
+				item.setI18nText(getKrValue("ptplugin["+pPlugID+"].internaldata.group["+j+"].item["+k+"].titleID","string"));
+				item.setAction(getKrValue("ptplugin["+pPlugID+"].internaldata.group["+j+"].item["+k+"].action","string"));
+				item.setThumbnail(getKrValue("ptplugin["+pPlugID+"].internaldata.group["+j+"].item["+k+"].thumbnail","string"));
+				item.setCssClass(getKrValue("ptplugin["+pPlugID+"].internaldata.group["+j+"].item["+k+"].cssClass","string"));
+				item.setParent(group);
+				
+				//Build the Options data for the item
+				itemOptionsLength = parseInt(getKrPanoInstance().get("ptplugin["+pPlugID+"].internaldata.group["+j+"].item["+k+"].option.count"));
+				for(var l = 0; l < itemOptionsLength; l++)
+				{
+					item.addOption(getKrValue("ptplugin["+pPlugID+"].internaldata.group["+j+"].item["+k+"].option["+l+"].name","string"), getKrValue("ptplugin["+pPlugID+"].internaldata.group["+j+"].item["+k+"].option["+l+"].value", getKrValue("ptplugin["+pPlugID+"].internaldata.group["+j+"].item["+k+"].option["+l+"].type", "string")));
+				}
+				
+				group.addChild(item);
+			}
+			
+			groupOptionsLength = parseInt(getKrPanoInstance().get("ptplugin["+pPlugID+"].internaldata.group["+j+"].option.count"));
+			for(var m = 0; m < groupOptionsLength; m++)
+			{
+				group.addOption(getKrValue("ptplugin["+pPlugID+"].internaldata.group["+j+"].option["+m+"].name","string"), getKrValue("ptplugin["+pPlugID+"].internaldata.group["+j+"].option["+m+"].value", getKrValue("ptplugin["+pPlugID+"].internaldata.group["+j+"].option["+m+"].type", "string")));
+			}
+			
+			kolorMenu.addKolorMenuGroup(group);
+		}
+		
+		//KolorMenu is now ready
+		kolorMenu.setReady(true);
+		//call ready statement for krpano script
+		invokeKrFunction("kolorMenuJsReady_"+pPlugID);
+		
+		//Display the menu
+		kolorMenu.openKolorMenu();
+	}
+}
+
+/**
+ * @function
+ * @description Update and populate kolorMenu.
+ * @param {String} pPlugID The name of the plugin you want to update.
+ * @return {void} 
+ */
+function updateKolorMenu(pPlugID)
+{
+	if(debug) { console.log("updateKolorMenu "+pPlugID); }
+
+	//Check if the KolorMenu is loaded
+	if(ktools.KolorPluginList.getInstance().getPlugin(pPlugID).isInitialized() && typeof KolorMenu != "undefined" && ktools.KolorPluginList.getInstance().getPlugin(pPlugID).getRegistered() != null)
+	{
+		//Get the registered instance of KolorMenu
+		var kolorMenu = ktools.KolorPluginList.getInstance().getPlugin(pPlugID).getRegistered();
+		
+		//If kolorMenu is ready, update datas
+		if(kolorMenu.isReady())
+		{
+			var groups = kolorMenu.getKolorMenuGroups();
+			var groupsLength = groups.size();
+			var itemsLength = 0;
+			var group, item;
+			
+			for(var i = 0; i < groupsLength; i++)
+			{
+				group = groups.get(i);
+				itemsLength = group.getChildren().size();
+				
+				if(group.getSubMenu()){
+					group.setTitle(ktools.I18N.getInstance().getMessage(group.getI18nText()));
+				}
+				
+				if(group.hasChildren() && itemsLength > 0){
+					for(var j = 0; j < itemsLength; j++){
+						item = group.getChildren().get(j);
+						item.setTitle(ktools.I18N.getInstance().getMessage(item.getI18nText()));
+					}
+				}
+			}
+		}
+	}
+}
+
+/**
+ * @function
+ * @description Delete kolorMenu.
+ * @param {String} pPlugID The name of the plugin you want to delete.
+ * @return {void} 
+ */
+function deleteKolorMenu(pPlugID)
+{
+	if(ktools.KolorPluginList.getInstance().getPlugin(pPlugID)){
+		ktools.KolorPluginList.getInstance().removePlugin(pPlugID);
+	}
+	var parent = document.getElementById("panoDIV");
+	var child = document.getElementById(pPlugID);
+	if(parent && child){
+		parent.removeChild(child);
+	}
+}
+
+
+/**
+ * @function
+ * @description Add an instance of kolorFloorPlan JS Engine, loads JS and CSS files then init and populate related plugin that's based on it.
+ * @param {String} pPlugID The name of the plugin you want to give to the kolorFloorPlan instance.
+ * @param {String} pContent The content you want to inject into the kolorFloorPlan. I could be HTML string or any other string.
+ * @return {void} 
+ */
+function addKolorFloorPlan(pPlugID, pContent)
+{
+	if(typeof ktools.KolorPluginList.getInstance().getPlugin(pPlugID) == "undefined")
+	{
+		var kolorFloorPlanCSS = new ktools.CssStyle("KolorFloorPlanCSS", crossDomainTargetUrl+"indexdata/graphics/KolorFloorPlan/kolorFloorPlan.css");
+		var kolorFloorPlanJS = new ktools.Script("KolorFloorPlanJS", crossDomainTargetUrl+"indexdata/graphics/KolorFloorPlan/KolorFloorPlan.min.js", [], true);
+		var kolorFloorPlanPlugin = new ktools.KolorPlugin(pPlugID);
+		kolorFloorPlanPlugin.addScript(kolorFloorPlanJS);
+		kolorFloorPlanPlugin.addCss(kolorFloorPlanCSS);
+		ktools.KolorPluginList.getInstance().addPlugin(kolorFloorPlanPlugin.getPluginName(), kolorFloorPlanPlugin, true);
+	}
+	
+	showKolorFloorPlan(pPlugID, pContent);
+}
+
+/**
+ * @function
+ * @description Init, populate and show the kolorFloorPlan. 
+ * @param {String} pPlugID The name of the plugin you want to init and show.
+ * @param {String} pContent The content you want to inject into the kolorFloorPlan. I could be HTML string or any other string.
+ * @return {void} 
+ */
+function showKolorFloorPlan(pPlugID, pContent)
+{
+	if(debug) { console.log("showKolorFloorPlan " + pPlugID); }
+	
+	//Check if the KolorFloorPlan is loaded
+	if(!ktools.KolorPluginList.getInstance().getPlugin(pPlugID).isInitialized() || typeof KolorFloorPlan == "undefined")
+	{
+		var err = "KolorFloorPlan is not loaded";
+		if(debug){ console.log(err); }
+		//If not loaded, retry in 100 ms
+		setTimeout(function() { showKolorFloorPlan(pPlugID, pContent); }, 100);
+		return;
+	}
+	
+	//If not, instantiate the KolorFloorPlan and register it.
+	if(ktools.KolorPluginList.getInstance().getPlugin(pPlugID).getRegistered() == null)
+	{
+		ktools.KolorPluginList.getInstance().getPlugin(pPlugID).register(new KolorFloorPlan(pPlugID, pContent));
+	}
+	
+	//Get the registered instance of KolorFloorPlan
+	var kolorFloorPlan = ktools.KolorPluginList.getInstance().getPlugin(pPlugID).getRegistered();
+	
+	//If kolorFloorPlan is not ready, populate datas
+	if(!kolorFloorPlan.isReady())
+	{
+		var kolorFloorPlanOptions = [];
+		var optionName = '';
+		var optionValue = '';
+		//Build the Options data for the KolorFloorPlan
+		var optionLength = parseInt(getKrPanoInstance().get("ptplugin["+pPlugID+"].settings.option.count"));
+		for(var j = 0; j < optionLength; j++)
+		{
+			optionName = getKrValue("ptplugin["+pPlugID+"].settings.option["+j+"].name","string");
+			optionValue = getKrValue("ptplugin["+pPlugID+"].settings.option["+j+"].value", getKrValue("ptplugin["+pPlugID+"].settings.option["+j+"].type", "string"));
+			kolorFloorPlanOptions[optionName] = optionValue;
+		}
+		//add the device check
+		kolorFloorPlanOptions['device'] = getKrValue('vrtourdevice','string');
+		//kolorFloorPlanOptions['scale'] = getKrValue('vrtourdevicescale','float');
+		kolorFloorPlan.setKolorFloorPlanOptions(kolorFloorPlanOptions);
+		
+		var kolorFloorPlanItems = [];
+		var kolorFloorPlanSpots = [];
+		var planName = '';
+		var planValues = null;
+		var planSpots = null;
+		var planSpot = null;
+		
+		var kolorFloorPlanSelectedItem = getKrValue("ptplugin["+pPlugID+"].floorplanItems.selectedItem","string");
+		var kolorFloorPlanSelectedSpot = getKrValue("ptplugin["+pPlugID+"].floorplanItems.selectedSpot","string");
+		var kolorFloorPlanSelectedSpotOptions = [getKrValue("ptplugin["+pPlugID+"].floorplanItems.selectedSpotScene","string"), getKrValue("ptplugin["+pPlugID+"].floorplanItems[0].selectedSpotHeading","float"), getKrValue("ptplugin["+pPlugID+"].floorplanItems.selectedSpotFov","float")];
+		
+		var floorplansLength = parseInt(getKrPanoInstance().get("ptplugin["+pPlugID+"].floorplanItems.floorplanItem.count"));
+		for(var j = 0; j < floorplansLength; j++)
+		{
+			planName = getKrValue("ptplugin["+pPlugID+"].floorplanItems.floorplanItem["+j+"].name","string");
+			
+			planValues = new Object();
+			planValues.title = getKrValue("ptplugin["+pPlugID+"].floorplanItems.floorplanItem["+j+"].title","string");
+			planValues.src = getKrValue("ptplugin["+pPlugID+"].floorplanItems.floorplanItem["+j+"].url","string");
+			planValues.width = getKrValue("ptplugin["+pPlugID+"].floorplanItems.floorplanItem["+j+"].width","int");
+			planValues.height = getKrValue("ptplugin["+pPlugID+"].floorplanItems.floorplanItem["+j+"].height","int");
+			planValues.heading = getKrValue("ptplugin["+pPlugID+"].floorplanItems.floorplanItem["+j+"].heading","float");
+			
+			kolorFloorPlanItems[planName] = planValues;
+			
+			planSpots = [];
+			var floorplansItemsLength = parseInt(getKrPanoInstance().get("ptplugin["+pPlugID+"].floorplanItems.floorplanItem["+j+"].spot.count"));
+			for(var k = 0; k < floorplansItemsLength; k++)
+			{
+				planSpot = new Object();
+				planSpot.name = getKrValue("ptplugin["+pPlugID+"].floorplanItems.floorplanItem["+j+"].spot["+k+"].name","string");
+				planSpot.posx = getKrValue("ptplugin["+pPlugID+"].floorplanItems.floorplanItem["+j+"].spot["+k+"].posX","float");
+				planSpot.posy = getKrValue("ptplugin["+pPlugID+"].floorplanItems.floorplanItem["+j+"].spot["+k+"].posY","float");
+				planSpot.heading = getKrValue("ptplugin["+pPlugID+"].floorplanItems.floorplanItem["+j+"].spot["+k+"].heading","float");
+				planSpot.desc = getKrValue("ptplugin["+pPlugID+"].floorplanItems.floorplanItem["+j+"].spot["+k+"].desc","string");
+				planSpot.desctype = getKrValue("ptplugin["+pPlugID+"].floorplanItems.floorplanItem["+j+"].spot["+k+"].descType","string");
+				planSpot.scene = getKrValue("ptplugin["+pPlugID+"].floorplanItems.floorplanItem["+j+"].spot["+k+"].scene","string");
+				planSpot.jsclick = getKrValue("ptplugin["+pPlugID+"].floorplanItems.floorplanItem["+j+"].spot["+k+"].jsClick","string");
+				planSpot.planar = getKrValue("ptplugin["+pPlugID+"].floorplanItems.floorplanItem["+j+"].spot["+k+"].planar","bool");
+				planSpot.icon = getKrValue("ptplugin["+pPlugID+"].floorplanItems.floorplanItem["+j+"].spot["+k+"].icon.url","string");
+				planSpot.width = getKrValue("ptplugin["+pPlugID+"].floorplanItems.floorplanItem["+j+"].spot["+k+"].icon.iconWidth","int");
+				planSpot.height = getKrValue("ptplugin["+pPlugID+"].floorplanItems.floorplanItem["+j+"].spot["+k+"].icon.iconHeight","int");
+				planSpot.anchor = getKrValue("ptplugin["+pPlugID+"].floorplanItems.floorplanItem["+j+"].spot["+k+"].icon.iconAnchor","string");
+				
+				planSpots[planSpot.name] = planSpot;
+			}
+			kolorFloorPlanSpots[planName] = planSpots;
+		}
+		kolorFloorPlan.setKolorFloorPlanItems(kolorFloorPlanItems);
+		kolorFloorPlan.setKolorFloorPlanSpots(kolorFloorPlanSpots);
+		kolorFloorPlan.setKolorFloorPlanSelectedItem(kolorFloorPlanSelectedItem);
+		kolorFloorPlan.setKolorFloorPlanSelectedSpot(kolorFloorPlanSelectedSpot);
+		kolorFloorPlan.setKolorFloorPlanSelectedSpotOptions(kolorFloorPlanSelectedSpotOptions);
+		
+		kolorFloorPlan.setKrpanoEngine(getKrPanoInstance());
+		
+		//set url for images
+		kolorFloorPlan.setGraphicsUrl(crossDomainTargetUrl+"indexdata/graphics/"+pPlugID.toLowerCase()+"/");
+		
+		//KolorFloorPlan is now ready
+		kolorFloorPlan.setReady(true);
+		//call ready statement for krpano script
+		invokeKrFunction("kolorFloorplanJsReady_"+pPlugID);
+	}
+	
+	kolorFloorPlan.showKolorFloorPlan();
+	
+	//If a plugin method has been called before registration the method is called now
+	if(pluginLoaded && pluginLoaded.item(pPlugID)){
+		invokePluginFunction.apply(null, pluginLoaded.item(pPlugID).funcArgs);
+		pluginLoaded.remove(pPlugID);
+	}
+}
+
+/**
+ * @function
+ * @description Delete kolorFloorPlan.
+ * @param {String} pPlugID The name of the plugin you want to delete.
+ * @return {void} 
+ */
+function deleteKolorFloorPlan(pPlugID)
+{
+	if(ktools.KolorPluginList.getInstance().getPlugin(pPlugID)){
+		ktools.KolorPluginList.getInstance().removePlugin(pPlugID);
+	}
+}
+
+
+/**
+ * @function
+ * @description Add an instance of kolorArea JS Engine, loads JS and CSS files then init and populate related plugin that's based on it.
+ * @param {String} pPlugID The name of the plugin you want to give to the kolorArea instance.
+ * @return {void}
+ */
+function addKolorArea(pPlugID)
+{
+	if(typeof ktools.KolorPluginList.getInstance().getPlugin(pPlugID) == "undefined")
+	{
+		var kolorAreaCSS = new ktools.CssStyle("KolorAreaCSS", crossDomainTargetUrl+"indexdata/graphics/KolorArea/kolorArea.css");
+		var kolorAreaJS = new ktools.Script("KolorAreaJS", crossDomainTargetUrl+"indexdata/graphics/KolorArea/KolorArea.min.js", [], true);
+		var kolorAreaPlugin = new ktools.KolorPlugin(pPlugID);
+		kolorAreaPlugin.addScript(kolorAreaJS);
+		kolorAreaPlugin.addCss(kolorAreaCSS);
+		ktools.KolorPluginList.getInstance().addPlugin(kolorAreaPlugin.getPluginName(), kolorAreaPlugin, true);
+	}
+}
+
+/**
+ * @function
+ * @description Init, populate and show the kolorArea.
+ * @param {String} pPlugID The name of the plugin you want to init and show.
+ * @param {String} pContent The content you want to inject into the kolorArea. I could be HTML string or any other string.
+ * @return {void}
+ */
+function showKolorArea(pPlugID, pContent)
+{
+	if(debug) { console.log("showKolorArea " + pPlugID); }
+
+	//Check if the KolorArea is loaded
+	if(!ktools.KolorPluginList.getInstance().getPlugin(pPlugID).isInitialized() || typeof KolorArea == "undefined")
+	{
+		err = "KolorArea JS is not loaded !";
+		if(debug){ console.log(err); }
+		//If not loaded, retry in 100 ms
+		setTimeout(function() { showKolorArea(pPlugID, pContent); }, 100);
+		return;
+	}
+
+	//Check if the KolorArea is instantiate and registered with the ktools.Plugin Object
+	//If not, instantiate the KolorArea and register it.
+	if(ktools.KolorPluginList.getInstance().getPlugin(pPlugID).getRegistered() == null)
+	{
+		ktools.KolorPluginList.getInstance().getPlugin(pPlugID).register(new KolorArea(pPlugID, "panoDIV"));
+	}
+
+	//Get the registered instance of KolorArea
+	var kolorArea = ktools.KolorPluginList.getInstance().getPlugin(pPlugID).getRegistered();
+
+	//If kolorArea is not ready, populate datas
+	if(!kolorArea.isReady())
+	{
+		var kolorAreaOptions = [];
+		var optionName = '';
+		var optionValue = '';
+
+		//Build the Options data for the KolorArea
+		var optionLength = parseInt(getKrPanoInstance().get("ptplugin["+pPlugID+"].settings.option.count"));
+
+		for(var j = 0; j < optionLength; j++)
+		{
+			optionName = getKrValue("ptplugin["+pPlugID+"].settings.option["+j+"].name","string");
+			if (optionName == 'zorder') {
+				optionValue = kolorStartIndex + getKrValue("ptplugin["+pPlugID+"].settings.option["+j+"].value", getKrValue("ptplugin["+pPlugID+"].settings.option["+j+"].type", "string"));
+			} else {
+				optionValue = getKrValue("ptplugin["+pPlugID+"].settings.option["+j+"].value", getKrValue("ptplugin["+pPlugID+"].settings.option["+j+"].type", "string"));
+			}
+			kolorAreaOptions[optionName] = optionValue;
+		}
+		//add the device check
+		kolorAreaOptions['device'] = getKrValue('vrtourdevice','string');
+		//kolorAreaOptions['scale'] = getKrValue('vrtourdevicescale','float');
+		kolorArea.setKolorAreaOptions(kolorAreaOptions);
+
+		//KolorArea is now ready !
+		kolorArea.setReady(true);
+		//call ready statement for krpano script
+		invokeKrFunction("kolorAreaJsReady_"+pPlugID);
+	}
+
+	kolorArea.setKolorAreaContent(pContent);
+	kolorArea.openKolorArea();
+
+	//If a plugin method has been called before registration the method is called now
+	if(pluginLoaded && pluginLoaded.item(pPlugID)){
+		invokePluginFunction.apply(null, pluginLoaded.item(pPlugID).funcArgs);
+		pluginLoaded.remove(pPlugID);
+	}
+}
+
+/**
+ * @function
+ * @description Delete kolorArea.
+ * @param {String} pPlugID The name of the plugin you want to delete.
+ * @return {void}
+ */
+function deleteKolorArea(pPlugID)
 {
 	if(ktools.KolorPluginList.getInstance().getPlugin(pPlugID)){
 		ktools.KolorPluginList.getInstance().removePlugin(pPlugID);
