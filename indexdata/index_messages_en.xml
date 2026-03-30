@@ -11,10 +11,19 @@
   <data name="en_panogroup15_title"><![CDATA[AMBIENTES 360]]></data>
 
   <data name="en_pano10_title"><![CDATA[LIVING]]></data>
+  <data name="en_spotpoint21_tooltip"><![CDATA[VARANDA]]></data>
+  <data name="en_spotpoint26_tooltip"><![CDATA[QUARTO 01]]></data>
+  <data name="en_spotpoint27_tooltip"><![CDATA[QUARTO 02]]></data>
+  <data name="en_spotpoint28_tooltip"><![CDATA[SUITE]]></data>
   <data name="en_pano11_title"><![CDATA[VARANDA]]></data>
+  <data name="en_spotpoint22_tooltip"><![CDATA[LIVING]]></data>
+  <data name="en_spotpoint60_tooltip"><![CDATA[Portas Abertas]]></data>
   <data name="en_pano12_title"><![CDATA[QUARTO 01]]></data>
+  <data name="en_spotpoint23_tooltip"><![CDATA[LIVING]]></data>
   <data name="en_pano13_title"><![CDATA[QUARTO 02]]></data>
+  <data name="en_spotpoint24_tooltip"><![CDATA[LIVING]]></data>
   <data name="en_pano14_title"><![CDATA[SUITE]]></data>
+  <data name="en_spotpoint25_tooltip"><![CDATA[LIVING]]></data>
 
 
 
